@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { soundEffects } from '../utils/soundEffects';
+import { musicBoxPlayer } from '../utils/musicBoxPlayer';
 
 export default function IntroEnvelope({ onOpen }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,8 +13,16 @@ export default function IntroEnvelope({ onOpen }) {
     if (isOpening || isOpen) return;
     setIsOpening(true);
 
-    // Audio chime effect
-    soundEffects.playSparkle();
+    // Synchronously unlock and prime audio engine immediately on user touch for mobile phones
+    try {
+      musicBoxPlayer.unlock();
+      soundEffects.init();
+      soundEffects.playSparkle();
+      // Start pristine melody on initial touch gesture
+      musicBoxPlayer.play(0);
+    } catch {
+      // fallback
+    }
 
     // Golden confetti burst from center
     try {

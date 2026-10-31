@@ -1,99 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, Music, Disc3, Sparkles, Heart } from 'lucide-react';
-import { musicBoxSynth } from '../utils/audioSynth';
+import { musicBoxPlayer } from '../utils/musicBoxPlayer';
 
 export default function MusicPlayer({ isPlaying, onTogglePlay }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(26);
-  const [volume, setVolume] = useState(0.8);
+  const [volume, setVolume] = useState(0.85);
   const [isMuted, setIsMuted] = useState(false);
-  const [audioSourceMode, setAudioSourceMode] = useState('mp3'); // 'mp3' or 'synth'
   const audioRef = useRef(null);
+  const customMp3Path = `${import.meta.env.BASE_URL}music/birthday-song.mp3`;
 
-  // Sync with HTML5 audio element
+  // Sync musicBoxPlayer playback with master isPlaying state
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    audio.volume = isMuted ? 0 : volume;
-
-    const handleLoadedMetadata = () => {
-      if (audio.duration && !isNaN(audio.duration)) {
-        setDuration(audio.duration);
-      }
-    };
-
-    const handleTimeUpdate = () => {
-      if (audioSourceMode === 'mp3') {
-        setCurrentTime(audio.currentTime);
-      }
-    };
-
-    const handleEnded = () => {
-      // Loop song
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
-    };
-
-    const handleError = () => {
-      // If MP3 fails, seamlessly fallback to built-in musicBoxSynth
-      console.info('Switching to built-in music box synthesizer fallback.');
-      setAudioSourceMode('synth');
-    };
-
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('ended', handleEnded);
-    audio.addEventListener('error', handleError);
-
-    return () => {
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('ended', handleEnded);
-      audio.removeEventListener('error', handleError);
-    };
-  }, [audioSourceMode, isMuted, volume]);
-
-  // Handle master play/pause synchronization
-  useEffect(() => {
-    const audio = audioRef.current;
-
     if (isPlaying) {
-      if (audioSourceMode === 'mp3' && audio) {
-        audio.play().catch((err) => {
-          console.warn('Audio play restricted or file not ready, falling back to synthesizer:', err);
-          setAudioSourceMode('synth');
-          musicBoxSynth.play(currentTime);
-        });
-      } else {
-        musicBoxSynth.play(currentTime);
-      }
+      musicBoxPlayer.unlock();
+      musicBoxPlayer.play(currentTime);
     } else {
-      if (audio) audio.pause();
-      musicBoxSynth.pause();
+      musicBoxPlayer.pause();
     }
-  }, [isPlaying, audioSourceMode]);
+  }, [isPlaying]);
 
-  // Sync synthesizer time updates
+  // Sync timer updates from musicBoxPlayer
   useEffect(() => {
-    musicBoxSynth.setVolume(isMuted ? 0 : volume);
-    musicBoxSynth.onTimeUpdate = (time, dur) => {
-      if (audioSourceMode === 'synth') {
-        setCurrentTime(time);
-        setDuration(dur);
-      }
+    musicBoxPlayer.setVolume(isMuted ? 0 : volume);
+    musicBoxPlayer.onTimeUpdate = (time, dur) => {
+      setCurrentTime(time);
+      setDuration(dur);
     };
-  }, [audioSourceMode, isMuted, volume]);
+  }, [isMuted, volume]);
 
   const handleSeek = (e) => {
     const newTime = parseFloat(e.target.value);
     setCurrentTime(newTime);
-    if (audioSourceMode === 'mp3' && audioRef.current) {
-      audioRef.current.currentTime = newTime;
-    } else {
-      musicBoxSynth.seek(newTime);
-    }
+    musicBoxPlayer.seek(newTime);
   };
 
   const handleVolumeChange = (e) => {
@@ -102,18 +42,13 @@ export default function MusicPlayer({ isPlaying, onTogglePlay }) {
     if (newVol > 0 && isMuted) {
       setIsMuted(false);
     }
-    if (audioRef.current) {
-      audioRef.current.volume = newVol;
-    }
-    musicBoxSynth.setVolume(newVol);
+    musicBoxPlayer.setVolume(newVol);
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
-    if (audioRef.current) {
-      audioRef.current.volume = !isMuted ? 0 : volume;
-    }
-    musicBoxSynth.setVolume(!isMuted ? 0 : volume);
+    const nextMuted = !isMuted;
+    setIsMuted(nextMuted);
+    musicBoxPlayer.setVolume(nextMuted ? 0 : volume);
   };
 
   const formatTime = (secs) => {
@@ -125,9 +60,6 @@ export default function MusicPlayer({ isPlaying, onTogglePlay }) {
 
   return (
     <section id="music" className="py-24 px-4 relative z-20">
-      {/* Underlying Audio Element */}
-      <audio ref={audioRef} src="/music/birthday-song.mp3" preload="auto" loop />
-
       <div className="max-w-4xl mx-auto">
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-14">
@@ -159,7 +91,7 @@ export default function MusicPlayer({ isPlaying, onTogglePlay }) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-sm sm:text-base text-[#733841]/80 font-cormorant italic text-lg sm:text-xl mt-2"
           >
-            A delicate birthday melody composed with love, tenderness, and reverence.
+            A delicate music-box birthday lullaby, crystal-clear and sweet.
           </motion.p>
         </div>
 
@@ -181,7 +113,7 @@ export default function MusicPlayer({ isPlaying, onTogglePlay }) {
                   style={{ left: `${15 + idx * 15}%`, bottom: '20%' }}
                   animate={{
                     y: [0, -120],
-                    x: [0, (idx % 2 === 0 ? 25 : -25)],
+                    x: [0, idx % 2 === 0 ? 25 : -25],
                     opacity: [0, 1, 0],
                     scale: [0.7, 1.2, 0.6],
                   }}
@@ -202,7 +134,7 @@ export default function MusicPlayer({ isPlaying, onTogglePlay }) {
             {/* Spinning Rose Gold Vinyl Disc */}
             <div className="relative shrink-0">
               <div
-                className={`w-40 h-40 sm:w-48 sm:h-48 rounded-full bg-gradient-to-tr from-[#2d1b20] via-[#59313b] to-[#1f1115] p-3 shadow-[0_15px_35px_rgba(183,110,121,0.35)] flex items-center justify-center border-4 border-[#d4af37]/60 transition-transform ${
+                className={`w-36 h-36 sm:w-48 sm:h-48 rounded-full bg-gradient-to-tr from-[#2d1b20] via-[#59313b] to-[#1f1115] p-3 shadow-[0_15px_35px_rgba(183,110,121,0.35)] flex items-center justify-center border-4 border-[#d4af37]/60 transition-transform ${
                   isPlaying ? 'animate-spin' : ''
                 }`}
                 style={{ animationDuration: '8s' }}
@@ -234,10 +166,10 @@ export default function MusicPlayer({ isPlaying, onTogglePlay }) {
               <div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-sans font-semibold tracking-wider text-[#9c535e] uppercase">
-                    Track: Amma&apos;s Birthday Serenade
+                    Track: Sweet Music Box Serenade
                   </span>
                   <span className="text-[10px] uppercase font-sans tracking-widest px-2.5 py-0.5 rounded-full bg-[#ffe4e6] text-[#b76e79] font-medium">
-                    {audioSourceMode === 'mp3' ? 'MP3 Audio' : 'Music Box Synth'}
+                    HD Celesta Sound
                   </span>
                 </div>
 
@@ -251,13 +183,13 @@ export default function MusicPlayer({ isPlaying, onTogglePlay }) {
               </div>
 
               {/* Animated Music Visualizer Bars */}
-              <div className="my-6 flex items-end justify-center sm:justify-start gap-1 sm:gap-1.5 h-12 bg-white/50 p-2.5 rounded-2xl border border-[#e0a9af]/30 shadow-inner">
+              <div className="my-6 flex items-end justify-center sm:justify-start gap-1 sm:gap-1.5 h-12 bg-white/50 p-2.5 rounded-2xl border border-[#e0a9af]/30 shadow-inner overflow-hidden">
                 {[
-                  35, 60, 85, 45, 95, 70, 50, 80, 100, 65, 40, 90, 75, 55, 85, 45, 70, 95, 60, 40, 75, 85, 50, 65
+                  35, 60, 85, 45, 95, 70, 50, 80, 100, 65, 40, 90, 75, 55, 85, 45, 70, 95, 60, 40, 75, 85, 50, 65,
                 ].map((barHeight, i) => (
                   <motion.div
                     key={i}
-                    className="w-1.5 sm:w-2 rounded-full bg-gradient-to-t from-[#b76e79] via-[#e0a9af] to-[#d4af37]"
+                    className="w-1.5 sm:w-2 rounded-full bg-gradient-to-t from-[#b76e79] via-[#e0a9af] to-[#d4af37] shrink-0"
                     animate={
                       isPlaying
                         ? {
@@ -280,7 +212,7 @@ export default function MusicPlayer({ isPlaying, onTogglePlay }) {
                 <input
                   type="range"
                   min="0"
-                  max={duration || 100}
+                  max={duration || 26}
                   step="0.1"
                   value={currentTime}
                   onChange={handleSeek}
@@ -335,18 +267,12 @@ export default function MusicPlayer({ isPlaying, onTogglePlay }) {
                 </div>
               </div>
 
-              {/* Note on custom song replacement */}
+              {/* Custom song path notice */}
               <div className="mt-4 pt-3 border-t border-[#e0a9af]/20 flex items-center justify-between text-[11px] text-[#9c535e]/80">
                 <span className="flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
                   Custom audio path: <code className="font-mono text-[#733841]">public/music/birthday-song.mp3</code>
                 </span>
-                <button
-                  onClick={() => setAudioSourceMode(audioSourceMode === 'mp3' ? 'synth' : 'mp3')}
-                  className="underline hover:text-[#733841] cursor-pointer"
-                >
-                  Switch to {audioSourceMode === 'mp3' ? 'Music Box Synth' : 'MP3 Audio'}
-                </button>
               </div>
             </div>
           </div>

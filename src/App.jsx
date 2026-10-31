@@ -16,6 +16,7 @@ import FinalSurprise from './components/FinalSurprise';
 import Footer from './components/Footer';
 import FloatingControls from './components/FloatingControls';
 import { soundEffects } from './utils/soundEffects';
+import { musicBoxPlayer } from './utils/musicBoxPlayer';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -65,6 +66,7 @@ export default function App() {
 
   const toggleMusic = () => {
     soundEffects.init();
+    musicBoxPlayer.unlock();
     setIsMusicPlaying((prev) => !prev);
   };
 
@@ -76,6 +78,8 @@ export default function App() {
   };
 
   const handlePlaySongCta = () => {
+    soundEffects.init();
+    musicBoxPlayer.unlock();
     setIsMusicPlaying(true);
     const el = document.getElementById('music');
     if (el) {
