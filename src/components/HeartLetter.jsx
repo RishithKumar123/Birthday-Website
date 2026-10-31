@@ -3,6 +3,20 @@ import { motion, useInView } from 'framer-motion';
 import { Heart, Sparkles, RotateCcw, Eye, Feather } from 'lucide-react';
 import { soundEffects } from '../utils/soundEffects';
 
+// ==============================================================
+// ✍️ PERSONAL SIGNATURE CONFIGURATION
+// You can easily change your name or personal sign-off here!
+// ==============================================================
+export const SIGNATURE_CONFIG = {
+  closing: "With lots of love, hugs, and best wishes,",
+  firstName: "Rishith",
+  lastName: "Kumar",
+  // Full formatted name displayed in the signature
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  },
+};
+
 const letterParagraphs = [
   "Dear Amma,",
   "Words can never explain how much you mean to me.",
@@ -170,24 +184,96 @@ export default function HeartLetter() {
             )}
           </div>
 
-          {/* Signature Section */}
-          <div className="mt-12 pt-8 border-t border-[#e0a9af]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <div>
-              <p className="text-xs uppercase font-sans tracking-widest text-[#9c535e] mb-1">
-                Eternal Promise
-              </p>
-              <p className="font-script text-3xl sm:text-4xl text-[#733841]">
-                With endless love, Your Child ❤️
-              </p>
-            </div>
+          {/* ======================================================= */}
+          {/* 💖 PERSONAL HANDWRITTEN SIGNATURE SECTION */}
+          {/* ======================================================= */}
+          <div className="mt-14 pt-10 border-t border-[#e0a9af]/35 flex flex-col items-center justify-center text-center relative">
+            {/* Salutation / Closing Line */}
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="font-cormorant text-xl sm:text-2xl md:text-3xl italic text-[#733841] tracking-wide mb-3"
+            >
+              {SIGNATURE_CONFIG.closing}
+            </motion.p>
 
-            {/* Rose Gold Wax Seal Decoration */}
-            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#9c535e] via-[#b76e79] to-[#d4af37] p-1 shadow-[0_4px_15px_rgba(183,110,121,0.4)] flex items-center justify-center self-end sm:self-center">
-              <div className="w-full h-full rounded-full bg-[#881337] flex flex-col items-center justify-center border border-[#f7e7ce]/50 text-white">
-                <Heart className="w-5 h-5 fill-white text-white" />
-                <span className="text-[8px] font-serif uppercase tracking-widest mt-0.5">
-                  Forever
+            {/* Prominently Displayed Handwritten Cursive Signature */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative my-2 select-none"
+            >
+              {/* Glowing ambient backdrop behind the name */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#e0a9af]/20 via-[#d4af37]/30 to-[#b76e79]/20 blur-xl rounded-full -z-10 scale-125" />
+
+              {/* Hand-written Cursive Name */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3">
+                {/* First Name "Rishith" displayed prominently */}
+                <span className="font-signature text-6xl sm:text-7xl md:text-8xl tracking-normal leading-none font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#9c535e] via-[#d4af37] to-[#b76e79] drop-shadow-[0_2px_12px_rgba(212,175,55,0.4)] animate-pulse-glow py-1">
+                  {SIGNATURE_CONFIG.firstName}
                 </span>
+
+                {/* Last Name "Kumar" in matching flowing calligraphy */}
+                <span className="font-signature text-5xl sm:text-6xl md:text-7xl tracking-normal leading-none font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#b76e79] via-[#c59b27] to-[#9c535e] drop-shadow-[0_2px_10px_rgba(183,110,121,0.35)] py-1">
+                  {SIGNATURE_CONFIG.lastName}
+                </span>
+              </div>
+
+              {/* Calligraphic Flourish Pen Stroke Underline SVG */}
+              <motion.svg
+                initial={{ pathLength: 0, opacity: 0 }}
+                whileInView={{ pathLength: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, delay: 0.5, ease: 'easeInOut' }}
+                className="w-48 sm:w-64 h-6 mx-auto -mt-1 sm:-mt-2 overflow-visible"
+                viewBox="0 0 240 24"
+                fill="none"
+              >
+                <path
+                  d="M10 12 C 60 22, 180 2, 230 14 C 190 22, 80 18, 40 16"
+                  stroke="url(#signatureGoldGrad)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <defs>
+                  <linearGradient id="signatureGoldGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#b76e79" />
+                    <stop offset="50%" stopColor="#d4af37" />
+                    <stop offset="100%" stopColor="#e0a9af" />
+                  </linearGradient>
+                </defs>
+              </motion.svg>
+            </motion.div>
+
+            {/* Small Animated Heart Below the Name */}
+            <motion.div
+              animate={{
+                scale: [1, 1.25, 1],
+                y: [0, -3, 0],
+              }}
+              transition={{
+                duration: 1.8,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className="mt-2.5 flex items-center justify-center gap-1.5"
+            >
+              <Heart className="w-5 h-5 text-[#b76e79] fill-[#b76e79] drop-shadow-[0_0_10px_rgba(183,110,121,0.6)]" />
+            </motion.div>
+
+            {/* Ornate Wax Seal Stamp */}
+            <div className="mt-8 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-[#9c535e] via-[#b76e79] to-[#d4af37] p-1 shadow-[0_4px_16px_rgba(183,110,121,0.45)] flex items-center justify-center">
+                <div className="w-full h-full rounded-full bg-[#881337] flex flex-col items-center justify-center border border-[#f7e7ce]/50 text-white shadow-inner">
+                  <Heart className="w-4 h-4 fill-white text-white" />
+                  <span className="text-[7px] font-serif uppercase tracking-widest mt-0.5">
+                    Forever
+                  </span>
+                </div>
               </div>
             </div>
           </div>

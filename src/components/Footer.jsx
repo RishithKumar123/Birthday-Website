@@ -21,8 +21,8 @@ export default function Footer() {
         </p>
 
         <div className="flex items-center gap-2 text-xs font-sans tracking-widest uppercase text-[#9c535e]">
-          <span>A Daughter & Son&apos;s Eternal Gift</span>
-          <Sparkles className="w-3 h-3 text-[#d4af37]" />
+          <span>With Eternal Love, Rishith</span>
+          <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
           <span>{currentYear}</span>
         </div>
       </div>

@@ -44,6 +44,7 @@ export default {
         serif: ['"Playfair Display"', 'Georgia', 'serif'],
         cormorant: ['"Cormorant Garamond"', 'serif'],
         script: ['"Great Vibes"', 'cursive'],
+        signature: ['"Alex Brush"', '"Great Vibes"', 'cursive'],
         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
       },
       boxShadow: {
