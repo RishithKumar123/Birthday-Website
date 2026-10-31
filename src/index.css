@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  body {
+    background-color: #FFFDF9;
+    color: #4A3B32;
+    overflow-x: hidden;
+  }
+}
+
+/* Luxury Glassmorphism & Borders */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(224, 169, 175, 0.35);
+  box-shadow: 0 20px 40px -15px rgba(183, 110, 121, 0.15), 0 0 15px rgba(247, 231, 206, 0.3);
+}
+
+.glass-panel-luxury {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 245, 247, 0.7) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(183, 110, 121, 0.22), 0 0 25px rgba(229, 193, 88, 0.25);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #c59b27 0%, #d4af37 25%, #f5d061 50%, #d4af37 75%, #b38728 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.rose-gold-text {
+  background: linear-gradient(135deg, #9c535e 0%, #b76e79 40%, #e0a9af 70%, #9c535e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border {
+  border-image: linear-gradient(to right, #d4af37, #f7e7ce, #d4af37) 1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fdfbf7;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #e0a9af 0%, #d4af37 100%);
+  border-radius: 9999px;
+  border: 2px solid #fdfbf7;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #b76e79 0%, #c59b27 100%);
+}
+
+/* Realistic Candle Flame Animation */
+@keyframes flicker {
+  0%, 100% {
+    transform: scale(1) rotate(-1deg);
+    filter: drop-shadow(0 0 10px #ff9800) drop-shadow(0 0 25px #ffd700);
+  }
+  25% {
+    transform: scale(1.08, 0.95) rotate(1.5deg);
+    filter: drop-shadow(0 0 14px #ff5722) drop-shadow(0 0 30px #ffeb3b);
+  }
+  50% {
+    transform: scale(0.96, 1.05) rotate(-2deg);
+    filter: drop-shadow(0 0 8px #ff9800) drop-shadow(0 0 20px #ffd700);
+  }
+  75% {
+    transform: scale(1.04, 1.02) rotate(1deg);
+    filter: drop-shadow(0 0 12px #ff7043) drop-shadow(0 0 28px #ffeb3b);
+  }
+}
+
+.candle-flame {
+  animation: flicker 1.4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+/* Smoke puff when blown out */
+@keyframes smokeRise {
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(2.5);
+  }
+}
+
+.smoke-puff {
+  animation: smokeRise 1.2s ease-out forwards;
+}
+
+/* Shimmering effect on gold buttons */
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-25deg);
+  animation: shimmerSweep 3.5s infinite;
+}
+
+/* Floating animation utilities */
+@keyframes gentleSway {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(6px, -12px) rotate(4deg);
+  }
+  66% {
+    transform: translate(-6px, -8px) rotate(-3deg);
+  }
+}
+
+.gentle-sway {
+  animation: gentleSway 7s ease-in-out infinite;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
