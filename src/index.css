@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Pacifico&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,6 +15,13 @@
     color: #4A3B32;
     overflow-x: hidden;
   }
+}
+
+/* Handwritten Cursive Signature with guaranteed Windows/Mac cursive fallbacks */
+.handwritten-signature {
+  font-family: 'Great Vibes', 'Alex Brush', 'Dancing Script', 'Segoe Script', 'Brush Script MT', cursive !important;
+  font-style: italic;
+  letter-spacing: 0.02em;
 }
 
 /* Luxury Glassmorphism & Borders */

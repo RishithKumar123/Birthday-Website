@@ -5,16 +5,11 @@ import { soundEffects } from '../utils/soundEffects';
 
 // ==============================================================
 // ✍️ PERSONAL SIGNATURE CONFIGURATION
-// You can easily change your name or personal sign-off here!
+// Easily update the signature or sign-off text here!
 // ==============================================================
 export const SIGNATURE_CONFIG = {
   closing: "With lots of love, hugs, and best wishes,",
-  firstName: "Rishith",
-  lastName: "Kumar",
-  // Full formatted name displayed in the signature
-  get fullName() {
-    return `${this.firstName} ${this.lastName}`;
-  },
+  signatureText: "The Dearest Ones",
 };
 
 const letterParagraphs = [
@@ -207,19 +202,18 @@ export default function HeartLetter() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative my-2 select-none"
             >
-              {/* Glowing ambient backdrop behind the name */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#e0a9af]/20 via-[#d4af37]/30 to-[#b76e79]/20 blur-xl rounded-full -z-10 scale-125" />
+              {/* Glowing ambient backdrop behind the signature */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#e0a9af]/25 via-[#d4af37]/35 to-[#b76e79]/25 blur-xl rounded-full -z-10 scale-125" />
 
-              {/* Hand-written Cursive Name */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3">
-                {/* First Name "Rishith" displayed prominently */}
-                <span className="font-signature text-6xl sm:text-7xl md:text-8xl tracking-normal leading-none font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#9c535e] via-[#d4af37] to-[#b76e79] drop-shadow-[0_2px_12px_rgba(212,175,55,0.4)] animate-pulse-glow py-1">
-                  {SIGNATURE_CONFIG.firstName}
-                </span>
-
-                {/* Last Name "Kumar" in matching flowing calligraphy */}
-                <span className="font-signature text-5xl sm:text-6xl md:text-7xl tracking-normal leading-none font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#b76e79] via-[#c59b27] to-[#9c535e] drop-shadow-[0_2px_10px_rgba(183,110,121,0.35)] py-1">
-                  {SIGNATURE_CONFIG.lastName}
+              {/* Hand-written Cursive Calligraphy */}
+              <div className="flex items-center justify-center">
+                <span
+                  style={{
+                    fontFamily: "'Great Vibes', 'Alex Brush', 'Dancing Script', 'Segoe Script', 'Brush Script MT', cursive",
+                  }}
+                  className="handwritten-signature text-6xl sm:text-7xl md:text-8xl tracking-normal leading-tight font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#9c535e] via-[#d4af37] to-[#b76e79] drop-shadow-[0_2px_14px_rgba(212,175,55,0.45)] animate-pulse-glow py-1 px-4"
+                >
+                  {SIGNATURE_CONFIG.signatureText}
                 </span>
               </div>
 
@@ -229,7 +223,7 @@ export default function HeartLetter() {
                 whileInView={{ pathLength: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.2, delay: 0.5, ease: 'easeInOut' }}
-                className="w-48 sm:w-64 h-6 mx-auto -mt-1 sm:-mt-2 overflow-visible"
+                className="w-56 sm:w-72 h-6 mx-auto -mt-1 sm:-mt-2 overflow-visible"
                 viewBox="0 0 240 24"
                 fill="none"
               >
@@ -249,7 +243,7 @@ export default function HeartLetter() {
               </motion.svg>
             </motion.div>
 
-            {/* Small Animated Heart Below the Name */}
+            {/* Small Animated Heart Below the Signature */}
             <motion.div
               animate={{
                 scale: [1, 1.25, 1],
